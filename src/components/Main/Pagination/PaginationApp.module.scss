@@ -1,0 +1,10 @@
+$mainColor: #272b33;
+
+.pagination {
+  display: inline-flex;
+  margin-bottom: 11.4px;
+  border-radius: 4.8px;
+  padding: 4.8px;
+  color: $mainColor;
+  gap: 14.8px;
+}
