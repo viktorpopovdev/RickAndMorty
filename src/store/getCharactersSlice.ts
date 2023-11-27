@@ -5,30 +5,30 @@ export const fetchCharacters = createAsyncThunk('characters/fetchCharacters', as
   await new Promise((resolve) => setTimeout(resolve, 1000));
   try {
     const response = await axios.get(url);
-    // console.log(response.data);
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {
-      console.log('error message: ', error.message);
+      // console.log('error message: ', error.message);
       return error.message;
     } else {
-      console.log('unexpected error: ', error);
+      // console.log('unexpected error: ', error);
       return 'An unexpected error occurred';
     }
   }
 });
 
-export const fetchFirstEpisode = createAsyncThunk('episode/fetchFirstEpisode', async (url: string) => {
+export const fetchMultipleEpisode = createAsyncThunk('episode/fetchFirstEpisode', async (ids: string) => {
+  console.log('fetchMul');
   try {
-    const response = await axios.get(url);
+    const response = await axios.get(`https://rickandmortyapi.com/api/episode/${ids}`);
     // console.log(response.data);
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {
-      console.log('error message: ', error.message);
+      // console.log('error message: ', error.message);
       return error.message;
     } else {
-      console.log('unexpected error: ', error);
+      // console.log('unexpected error: ', error);
       return 'An unexpected error occurred';
     }
   }
@@ -60,10 +60,15 @@ export interface Character {
   results: Result[];
 }
 
+interface Episode {
+  id: number;
+  name: string | undefined;
+}
+
 interface CharacterState {
   characters: Character;
   currentPage: number;
-  episode: string[];
+  episodes: Episode[];
   loading: boolean;
   error: string | null;
 }
@@ -76,7 +81,7 @@ const initialState: CharacterState = {
     results: [],
   },
   currentPage: 1,
-  episode: [],
+  episodes: [],
   loading: false,
   error: null,
 };
@@ -96,8 +101,8 @@ export const getCharactersSlice = createSlice({
       })
       .addCase(fetchCharacters.fulfilled, (state, action) => {
         state.loading = false;
-        state.characters = action.payload;
         console.log(action.payload);
+        state.characters = action.payload;
         state.characters.info.pages = action.payload.info.pages;
         state.error = null;
       })
@@ -105,14 +110,17 @@ export const getCharactersSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || 'Something went wrong';
       })
-      .addCase(fetchFirstEpisode.pending, (state) => {
+      .addCase(fetchMultipleEpisode.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchFirstEpisode.fulfilled, (state, action) => {
+      .addCase(fetchMultipleEpisode.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(action.payload);
-        state.episode.push(action.payload.name);
+        state.episodes = action.payload;
         state.error = null;
+      })
+      .addCase(fetchMultipleEpisode.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Something went wrong';
       });
   },
 });

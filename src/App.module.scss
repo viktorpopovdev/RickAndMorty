@@ -1,0 +1,23 @@
+.headings {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  height: 345px;
+
+  img {
+    position: absolute;
+    z-index: -1;
+  }
+
+  h1 {
+    margin: 0;
+    align-self: center;
+    color: #202329;
+    text-align: center;
+    font-family: Roboto;
+    font-size: 101.25px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: 111.375px;
+  }
+}
